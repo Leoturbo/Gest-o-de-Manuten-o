@@ -1,0 +1,77 @@
+/* Estilos avançados para tabelas */
+.table-advanced {
+    --bs-table-bg: transparent;
+    --bs-table-striped-bg: rgba(0, 0, 0, 0.02);
+    --bs-table-hover-bg: rgba(52, 152, 219, 0.1);
+    margin-bottom: 1rem;
+    width: 100%;
+}
+
+.table-advanced th {
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    padding: 0.75rem 1rem;
+}
+
+.table-advanced td {
+    padding: 1rem;
+    vertical-align: middle;
+    border-top: 1px solid #dee2e6;
+}
+
+.table-advanced tbody tr:last-child td {
+    border-bottom: 1px solid #dee2e6;
+}
+
+.table-advanced .actions {
+    white-space: nowrap;
+    width: 1%;
+}
+
+.table-advanced .badge-cell {
+    width: 120px;
+}
+
+/* Paginação personalizada */
+.pagination-custom .page-item.active .page-link {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.pagination-custom .page-link {
+    color: var(--primary-color);
+    padding: 0.5rem 0.75rem;
+}
+
+.pagination-custom .page-link:hover {
+    color: var(--dark-color);
+}
+
+/* Filtros de tabela */
+.table-filters {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 0.375rem;
+    margin-bottom: 1rem;
+}
+
+.table-filters .filter-group {
+    margin-bottom: 0.5rem;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .table-advanced {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    
+    .table-filters .row > div {
+        margin-bottom: 0.5rem;
+    }
+}

@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Página Não Encontrada{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 text-center">
+        <div class="error-container">
+            <h1 class="display-1 text-primary">404</h1>
+            <h2 class="display-4">Página Não Encontrada</h2>
+            <p class="lead">A página que você está procurando não existe ou foi movida.</p>
+            <div class="mt-4">
+                <a href="{{ url_for('index') }}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-home me-2"></i>Voltar para a Página Inicial
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+<style>
+.error-container {
+    padding: 3rem;
+    border-radius: 10px;
+    background-color: #f8f9fa;
+    margin-top: 3rem;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+.display-1 {
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.display-4 {
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+}
+
+.lead {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+}
+</style>

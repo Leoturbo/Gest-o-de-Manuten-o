@@ -1,0 +1,222 @@
+{% extends "base.html" %}
+
+{% block title %}Relatórios{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-chart-line me-2"></i>Relatórios</h2>
+    <div class="btn-group">
+        <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">
+            <i class="fas fa-download me-2"></i>Exportar
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="{{ url_for('exportar_relatorio', formato='pdf') }}">PDF</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('exportar_relatorio', formato='excel') }}">Excel</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('exportar_relatorio', formato='csv') }}">CSV</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h6 class="mb-0"><i class="fas fa-filter me-2"></i>Filtros</h6>
+            </div>
+            <div class="card-body">
+                <form method="GET" id="filtroForm">
+                    <div class="mb-3">
+                        <label for="data_inicio" class="form-label">Data Início</label>
+                        <input type="date" class="form-control" id="data_inicio" name="data_inicio" 
+                               value="{{ request.args.get('data_inicio', '') }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="data_fim" class="form-label">Data Fim</label>
+                        <input type="date" class="form-control" id="data_fim" name="data_fim"
+                               value="{{ request.args.get('data_fim', '') }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="tipo_equipamento" class="form-label">Tipo de Equipamento</label>
+                        <select class="form-select" id="tipo_equipamento" name="tipo_equipamento">
+                            <option value="">Todos</option>
+                            <option value="Gerador" {% if request.args.get('tipo_equipamento') == 'Gerador' %}selected{% endif %}>Gerador</option>
+                            <option value="Compressor" {% if request.args.get('tipo_equipamento') == 'Compressor' %}selected{% endif %}>Compressor</option>
+                            <option value="Betoneira" {% if request.args.get('tipo_equipamento') == 'Betoneira' %}selected{% endif %}>Betoneira</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="status" class="form-label">Status</label>
+                        <select class="form-select" id="status" name="status">
+                            <option value="">Todos</option>
+                            <option value="Disponível" {% if request.args.get('status') == 'Disponível' %}selected{% endif %}>Disponível</option>
+                            <option value="Alugado" {% if request.args.get('status') == 'Alugado' %}selected{% endif %}>Alugado</option>
+                            <option value="Manutenção" {% if request.args.get('status') == 'Manutenção' %}selected{% endif %}>Manutenção</option>
+                        </select>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-filter me-2"></i>Filtrar
+                        </button>
+                        <a href="{{ url_for('relatorios') }}" class="btn btn-secondary">
+                            <i class="fas fa-sync-alt me-2"></i>Limpar Filtros
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <div class="card shadow mb-4">
+            <div class="card-header bg-success text-white">
+                <h6 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Resumo Financeiro</h6>
+            </div>
+            <div class="card-body">
+                <canvas id="financeiroChart" height="200"></canvas>
+            </div>
+        </div>
+        
+        <div class="card shadow">
+            <div class="card-header bg-info text-white">
+                <h6 class="mb-0"><i class="fas fa-table me-2"></i>Dados Consolidados</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Métrica</th>
+                                <th class="text-end">Valor</th>
+                                <th class="text-end">%</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Faturamento Total</td>
+                                <td class="text-end">R$ {{ "%.2f"|format(faturamento_total) }}</td>
+                                <td class="text-end">100%</td>
+                            </tr>
+                            <tr>
+                                <td>Custos de Manutenção</td>
+                                <td class="text-end">R$ {{ "%.2f"|format(custos_totais) }}</td>
+                                <td class="text-end">{{ "%.1f"|format(custos_totais / faturamento_total * 100 if faturamento_total > 0 else 0) }}%</td>
+                            </tr>
+                            <tr>
+                                <td>Lucro Bruto</td>
+                                <td class="text-end">R$ {{ "%.2f"|format(faturamento_total - custos_totais) }}</td>
+                                <td class="text-end">{{ "%.1f"|format((faturamento_total - custos_totais) / faturamento_total * 100 if faturamento_total > 0 else 0) }}%</td>
+                            </tr>
+                            <tr>
+                                <td>Equipamentos Alugados</td>
+                                <td class="text-end">{{ equipamentos_alugados }}</td>
+                                <td class="text-end">{{ "%.1f"|format(equipamentos_alugados / total_equipamentos * 100 if total_equipamentos > 0 else 0) }}%</td>
+                            </tr>
+                            <tr>
+                                <td>Manutenções Realizadas</td>
+                                <td class="text-end">{{ total_manutencoes }}</td>
+                                <td class="text-end">-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card shadow">
+            <div class="card-header bg-warning text-dark">
+                <h6 class="mb-0"><i class="fas fa-exclamation-triangle me-2"></i>Equipamentos com Mais Manutenções</h6>
+            </div>
+            <div class="card-body">
+                <canvas id="problemasChart" height="150"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Gráfico Financeiro
+const financeiroCtx = document.getElementById('financeiroChart').getContext('2d');
+const financeiroChart = new Chart(financeiroCtx, {
+    type: 'bar',
+    data: {
+        labels: ['Faturamento', 'Custos', 'Lucro'],
+        datasets: [{
+            label: 'Valores (R$)',
+            data: [{{ faturamento_total }}, {{ custos_totais }}, {{ faturamento_total - custos_totais }}],
+            backgroundColor: [
+                'rgba(54, 162, 235, 0.7)',
+                'rgba(255, 99, 132, 0.7)',
+                'rgba(75, 192, 192, 0.7)'
+            ],
+            borderColor: [
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 99, 132, 1)',
+                'rgba(75, 192, 192, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                display: false
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        return 'R$ ' + context.raw.toFixed(2).replace('.', ',');
+                    }
+                }
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    callback: function(value) {
+                        return 'R$ ' + value.toFixed(2).replace('.', ',');
+                    }
+                }
+            }
+        }
+    }
+});
+
+// Gráfico de Equipamentos Problemáticos
+const problemasCtx = document.getElementById('problemasChart').getContext('2d');
+const problemasChart = new Chart(problemasCtx, {
+    type: 'bar',
+    data: {
+        labels: {{ equipamentos_problematicos_labels|safe }},
+        datasets: [{
+            label: 'Número de Manutenções',
+            data: {{ equipamentos_problematicos_values }},
+            backgroundColor: 'rgba(255, 159, 64, 0.7)',
+            borderColor: 'rgba(255, 159, 64, 1)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                display: false
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,11 @@
+# requirements.txt
+flask
+flask-sqlalchemy
+flask-migrate
+flask-login
+flask-wtf
+email-validator
+python-dotenv
+pandas
+openpyxl
+reportlab

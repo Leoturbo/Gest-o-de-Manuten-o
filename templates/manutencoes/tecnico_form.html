@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block title %}Registrar Manutenção{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="fas fa-tools me-2"></i>Registro de Manutenção</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data" id="manutencaoForm">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            {{ form.equipamento_id.label(class="form-label") }}
+                            {{ form.equipamento_id(class="form-select") }}
+                        </div>
+                        
+                        <div class="col-md-6">
+                            {{ form.data.label(class="form-label") }}
+                            {{ form.data(class="form-control", value=hoje) }}
+                        </div>
+                        
+                        <div class="col-12">
+                            {{ form.problemas.label(class="form-label") }}
+                            {{ form.problemas(class="form-control", rows="3", placeholder="Descreva os problemas encontrados...") }}
+                        </div>
+                        
+                        <div class="col-md-4">
+                            {{ form.tipo.label(class="form-label") }}
+                            {{ form.tipo(class="form-select") }}
+                        </div>
+                        
+                        <div class="col-md-4">
+                            {{ form.tecnico.label(class="form-label") }}
+                            {{ form.tecnico(class="form-control", value=current_user.username, readonly=true) }}
+                        </div>
+                        
+                        <div class="col-md-4">
+                            {{ form.custo.label(class="form-label") }}
+                            <div class="input-group">
+                                <span class="input-group-text">R$</span>
+                                {{ form.custo(class="form-control", placeholder="0,00") }}
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            {{ form.proxima_manutencao.label(class="form-label") }}
+                            {{ form.proxima_manutencao(class="form-control") }}
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label">Localização</label>
+                            <div class="input-group">
+                                <button class="btn btn-outline-secondary" type="button" id="getLocationBtn">
+                                    <i class="fas fa-map-marker-alt me-2"></i>Obter Localização
+                                </button>
+                                {{ form.localizacao(class="form-control", placeholder="Latitude, Longitude", readonly=true) }}
+                            </div>
+                        </div>
+                        
+                        <div class="col-12">
+                            {{ form.foto.label(class="form-label") }}
+                            {{ form.foto(class="form-control") }}
+                            <small class="text-muted">Envie fotos do equipamento ou da manutenção realizada</small>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 d-flex justify-content-between">
+                        <a href="{{ url_for('listar_manutencoes') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Salvar Manutenção
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Obter localização
+document.getElementById('getLocationBtn').addEventListener('click', function() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            const localizacaoField = document.getElementById('localizacao');
+            localizacaoField.value = position.coords.latitude + ', ' + position.coords.longitude;
+            
+            // Adicionar marcador no mapa (opcional)
+            if (typeof showOnMap === 'function') {
+                showOnMap(position.coords.latitude, position.coords.longitude);
+            }
+        }, function(error) {
+            alert('Erro ao obter localização: ' + error.message);
+        });
+    } else {
+        alert('Geolocalização não é suportada pelo seu navegador.');
+    }
+});
+
+// Validação do formulário
+document.getElementById('manutencaoForm').addEventListener('submit', function(e) {
+    const problemas = document.getElementById('problemas').value.trim();
+    if (problemas === '') {
+        e.preventDefault();
+        alert('Por favor, descreva os problemas encontrados.');
+        return false;
+    }
+    return true;
+});
+</script>
+{% endblock %}

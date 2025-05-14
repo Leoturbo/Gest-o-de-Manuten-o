@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}{{ 'Editar' if equipamento else 'Adicionar' }} Equipamento{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">
+                    <i class="fas fa-{{ 'edit' if equipamento else 'plus' }} me-2"></i>
+                    {{ 'Editar' if equipamento else 'Adicionar' }} Equipamento
+                </h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            {{ form.codigo.label(class="form-label") }}
+                            {{ form.codigo(class="form-control") }}
+                            {% if form.codigo.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.codigo.errors[0] }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-6">
+                            {{ form.tipo.label(class="form-label") }}
+                            {{ form.tipo(class="form-select") }}
+                        </div>
+                        
+                        <div class="col-12">
+                            {{ form.descricao.label(class="form-label") }}
+                            {{ form.descricao(class="form-control", rows="2") }}
+                        </div>
+                        
+                        <div class="col-md-4">
+                            {{ form.valor_compra.label(class="form-label") }}
+                            <div class="input-group">
+                                <span class="input-group-text">R$</span>
+                                {{ form.valor_compra(class="form-control") }}
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            {{ form.data_compra.label(class="form-label") }}
+                            {{ form.data_compra(class="form-control") }}
+                        </div>
+                        
+                        <div class="col-md-4">
+                            {{ form.status.label(class="form-label") }}
+                            {{ form.status(class="form-select") }}
+                        </div>
+                        
+                        <div class="col-12">
+                            {{ form.fornecedor.label(class="form-label") }}
+                            {{ form.fornecedor(class="form-control") }}
+                        </div>
+                        
+                        {% if equipamento and equipamento.foto_path %}
+                        <div class="col-12">
+                            <label class="form-label">Foto Atual</label>
+                            <div>
+                                <img src="{{ url_for('static', filename='uploads/' + equipamento.foto_path) }}" 
+                                     alt="Foto do equipamento" class="img-thumbnail" style="max-height: 200px;">
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        <div class="col-12">
+                            {{ form.foto.label(class="form-label") }}
+                            {{ form.foto(class="form-control") }}
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 d-flex justify-content-between">
+                        <a href="{{ url_for('listar_equipamentos') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Salvar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

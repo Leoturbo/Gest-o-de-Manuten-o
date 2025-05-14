@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}Meu Perfil{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="fas fa-user-circle me-2"></i>Meu Perfil</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 text-center">
+                        <div class="mb-3">
+                            <img src="{{ url_for('static', filename='img/avatar/' + current_user.avatar) if current_user.avatar else 'https://ui-avatars.com/api/?name=' + current_user.username + '&size=200' }}" 
+                                 class="img-thumbnail rounded-circle" 
+                                 alt="Avatar" 
+                                 style="width: 150px; height: 150px; object-fit: cover;">
+                        </div>
+                        <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#avatarModal">
+                            <i class="fas fa-camera me-2"></i>Alterar Avatar
+                        </button>
+                    </div>
+                    <div class="col-md-8">
+                        <form method="POST" enctype="multipart/form-data">
+                            {{ form.hidden_tag() }}
+                            
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    {{ form.username.label(class="form-label") }}
+                                    {{ form.username(class="form-control") }}
+                                    {% if form.username.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.username.errors[0] }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    {{ form.email.label(class="form-label") }}
+                                    {{ form.email(class="form-control") }}
+                                    {% if form.email.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.email.errors[0] }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="col-12">
+                                    <hr class="my-3">
+                                    <h5 class="mb-3">Alterar Senha</h5>
+                                </div>
+                                
+                                <div class="col-md-4">
+                                    {{ form.senha_atual.label(class="form-label") }}
+                                    {{ form.senha_atual(class="form-control") }}
+                                </div>
+                                
+                                <div class="col-md-4">
+                                    {{ form.nova_senha.label(class="form-label") }}
+                                    {{ form.nova_senha(class="form-control") }}
+                                </div>
+                                
+                                <div class="col-md-4">
+                                    {{ form.confirmar_senha.label(class="form-label") }}
+                                    {{ form.confirmar_senha(class="form-control") }}
+                                </div>
+                                
+                                <div class="col-12">
+                                    <div class="d-flex justify-content-end mt-3">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-save me-2"></i>Salvar Alterações
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para upload de avatar -->
+<div class="modal fade" id="avatarModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">Alterar Avatar</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="avatarForm" method="POST" action="{{ url_for('upload_avatar') }}" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="avatar" class="form-label">Selecione uma imagem</label>
+                        <input class="form-control" type="file" id="avatar" name="avatar" accept="image/*">
+                    </div>
+                    <div class="text-center">
+                        <img id="avatarPreview" src="#" alt="Pré-visualização" class="img-thumbnail mb-3" style="display: none; max-width: 200px;">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" form="avatarForm" class="btn btn-primary">Salvar</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Preview do avatar antes de enviar
+document.getElementById('avatar').addEventListener('change', function(e) {
+    const preview = document.getElementById('avatarPreview');
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    
+    preview.style.display = 'none';
+    
+    if (file) {
+        reader.onload = function(e) {
+            preview.src = e.target.result;
+            preview.style.display = 'block';
+        }
+        reader.readAsDataURL(file);
+    }
+});
+</script>
+{% endblock %}

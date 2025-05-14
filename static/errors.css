@@ -1,0 +1,64 @@
+/* Estilos para páginas de erro */
+.error-container {
+    max-width: 600px;
+    margin: 5rem auto;
+    padding: 2rem;
+    text-align: center;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+.error-code {
+    font-size: 5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.error-title {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: var(--dark-color);
+}
+
+.error-message {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    color: var(--dark-color);
+}
+
+.error-actions .btn {
+    margin: 0 0.5rem;
+}
+
+/* Animação para o código de erro */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.error-code {
+    animation: pulse 2s infinite;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .error-container {
+        margin: 2rem auto;
+        padding: 1.5rem;
+    }
+    
+    .error-code {
+        font-size: 3.5rem;
+    }
+    
+    .error-title {
+        font-size: 1.5rem;
+    }
+    
+    .error-message {
+        font-size: 1rem;
+    }
+}

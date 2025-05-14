@@ -1,0 +1,33 @@
+/* Estilo específico para o formulário de técnicos */
+#manutencaoForm {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+#getLocationBtn {
+    white-space: nowrap;
+}
+
+/* Preview da foto */
+#fotoPreview {
+    max-width: 100%;
+    max-height: 200px;
+    display: block;
+    margin: 10px auto;
+    border-radius: 4px;
+}
+
+/* Mapa de localização */
+#mapaLocalizacao {
+    height: 200px;
+    width: 100%;
+    margin-top: 10px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    display: none;
+}
+
+/* Estilo para campos obrigatórios */
+.required-field::after {
+    content: " *";
+    color: #e74c
