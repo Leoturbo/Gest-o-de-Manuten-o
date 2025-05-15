@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}{{ 'Editar' if cliente else 'Adicionar' }} Cliente{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">
+                    <i class="fas fa-{{ 'edit' if cliente else 'plus' }} me-2"></i>
+                    {{ 'Editar' if cliente else 'Adicionar' }} Cliente
+                </h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    <div class="mb-3">
+                        {{ form.nome.label(class="form-label") }}
+                        {{ form.nome(class="form-control") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.contato.label(class="form-label") }}
+                        {{ form.contato(class="form-control") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.endereco.label(class="form-label") }}
+                        {{ form.endereco(class="form-control", rows=3) }}
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('listar_clientes') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Salvar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

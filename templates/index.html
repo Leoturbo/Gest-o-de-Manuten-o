@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mt-4">Bem-vindo, {{ current_user.username }}!</h1>
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Equipamentos</h5>
+                    <p class="card-text">{{ equipamentos_count }} cadastrados</p>
+                    <a href="{{ url_for('listar_equipamentos') }}" class="btn btn-light">Ver todos</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Clientes</h5>
+                    <p class="card-text">{{ clientes_count }} cadastrados</p>
+                    <a href="{{ url_for('listar_clientes') }}" class="btn btn-light">Ver todos</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-warning mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Manutenções</h5>
+                    <p class="card-text">{{ manutencoes_count }} registradas</p>
+                    <a href="{{ url_for('listar_manutencoes') }}" class="btn btn-light">Ver todas</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
